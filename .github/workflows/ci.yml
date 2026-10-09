@@ -1,0 +1,14 @@
+name: quality-gate-demo
+on: [push]
+
+jobs:
+  test-and-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pytest pytest-cov
+      # 这一行就是质量门禁：覆盖率不足70%直接让流水线变红
+      - run: pytest --cov=app --cov-report=term-missing --cov-fail-under=70 tests/
